@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Личный кабинет";
+}
+
+<h1>Личный кабинет</h1>
+<h3>Привет @ViewBag.UserName!</h3>
+@if ((bool)ViewData["EditUsers"])
+{
+    <div>
+        <a class="btn btn-default" href="~/Users/Index">Пользователи</a>
+    </div>
+}
+@if ((bool)ViewData["AccessImport"])
+{
+    <div class="jumbotron">
+        <h4>Импорт данных из Энергосферы</h4>
+        @using (Html.BeginForm("Upload", "Data", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input class="btn" style="float:left;" type="file" name="upload" />
+            <input class="btn btn-success" type="submit" value="Отправить" />
+        }
+    </div>
+    <div class="jumbotron">
+        <h4>Импорт из УСПД .dss</h4>
+        @using (Html.BeginForm("UploadDSS", "Data", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input class="btn" style="float:left;" type="file" name="uploadDSS" />
+            <input class="btn btn-success" type="submit" value="Отправить .dss" />
+        }
+    </div>
+    <div class="jumbotron">
+        <h4>Отметки 'В Смете'</h4>
+        @using (Html.BeginForm("UploadSmeta", "Data", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input class="btn" style="float:left;" type="file" name="uploadSmeta" />
+            <input class="btn btn-success" type="submit" value="Отправить .blin" />
+        }
+    </div>
+}

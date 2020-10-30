@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = ViewBag.NetRegionName;
+}
+<p></p>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink((string)ViewBag.ContractName, "NetRegions", "Home", new { Id = ViewBag.ContractId }, new { @class = "breadcrumb-item" })</li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewBag.NetRegionName</li>
+    </ol>
+</nav>
+<div>
+    @Html.Partial("_eSubstationsTable", (object)ViewBag.ESubList)
+</div>
+

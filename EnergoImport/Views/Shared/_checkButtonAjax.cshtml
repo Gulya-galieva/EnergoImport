@@ -1,0 +1,9 @@
+﻿@model EnergoImport.Models.CheckButtonModel
+
+@using (Ajax.BeginForm("EditPointStatus", new AjaxOptions { UpdateTargetId = Model.Data + "_checkButton" + Model.Id }))
+{
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" name="Status" value="@Model.Status.ToString()" />
+    <input type="hidden" name="Data" value="@Model.Data" />
+    <input onclick="OnEditStatusUpdateColor('#row_@Model.Id')" class="@Model.CSSClass" style="width:70px; font-size: 12px;" type="submit" value="@Model.Text" />
+}

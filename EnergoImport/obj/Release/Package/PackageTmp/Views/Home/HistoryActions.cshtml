@@ -1,0 +1,36 @@
+﻿@model IEnumerable<EnergoImport.Models.ActionViewModel>
+@{
+    ViewBag.Title = "История изменений";
+}
+<h3>
+    История @Html.ActionLink((string)ViewBag.ESubName, "Points", "Home", new { Id = ViewBag.ESubId }, null)
+</h3>
+
+<table class="table table-hover table-sm">
+    <thead>
+        <tr style="background:#EEF3F6">
+            <th>#</th>
+            <th>Инфо</th>
+            <th>Действие</th>
+            <th>Пользователь</th>
+            <th>Время</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int n = 0;
+            foreach (var a in Model)
+            {
+                n++;
+        <tr style="background: @a.ColorRowCode">
+            <th>@n</th>
+            <td>@a.TypePU [@a.Serial] @a.Address</td>
+            <td>@a.Message</td>
+            <td>@a.UserName</td>
+            <td>@a.Action.Time.ToString("dd MMMM в HH:mm")</td>
+        </tr>
+            }
+        }
+
+    </tbody>
+</table>

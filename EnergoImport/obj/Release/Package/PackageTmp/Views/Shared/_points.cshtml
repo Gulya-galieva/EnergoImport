@@ -1,0 +1,110 @@
+﻿@model IEnumerable<EnergoImport.Models.PointsViewModel>
+
+<table class="table table-hover table-bordered table-sm">
+    <thead class="thead-dark">
+        <tr style="background:#EEF3F6">
+            <th>#</th>
+            <th>Адрес</th>
+            <th name="mode1">ФИО</th>
+            <th name="mode1">Место установки</th>
+            <th>Тип ПУ</th>
+            <th>Зав.№ [Сетевой]</th>
+            <th name="mode1">Номер тел.</th>
+            @if ((bool)ViewData["EditStatusAdded"])
+            { <th name="mode1">Добавил</th> }
+            @if ((bool)ViewData["EditStatusLinkIsOk"])
+            { <th name="mode1">Связь</th> }
+            @if ((bool)ViewData["EditStatusInEnergo"])
+            { <th name="mode1">ЭС</th> }
+            @if ((bool)ViewData["DeleteRegPoint"])
+            { <th name="mode1">x</th> }
+            <th name="mode2">КС2</th>
+            <th name="mode2">Заявка</th>
+            <th name="mode2">Обработана</th>
+            <th name="mode2">В Энергосфере</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int n = 0;
+            foreach (var pvm in Model)
+            {
+                n++;
+                <tr style="background: @pvm.RowColorCode" id="row_@pvm.Point.Id">
+                    <th>@n @if (pvm.Dublicates > 1) { <span>(@pvm.Dublicates)</span> }</th>
+                    <td><a href="https://www.google.ru/maps?q=Башкортостан+@pvm.Address" target="_blank">@pvm.Address</a></td>
+                    <td name="mode1">@pvm.Point.FIO</td>
+                    <td name="mode1">@pvm.Point.InstallPlace @pvm.Point.TTKoefficient</td>
+                    <td>@pvm.TypePU</td>
+                    <td>@pvm.Point.Serial [@pvm.NetAddress]</td>
+                    <td name="mode1">@pvm.Point.PhoneNumber</td>
+                    @if ((bool)ViewData["EditStatusAdded"])
+                    {
+                        <td name="mode1">
+                            <div id="AddedInEnergo_checkButton@(pvm.Point.Id)">
+                                @Html.Partial("_checkButtonAjax", new EnergoImport.Models.CheckButtonModel()
+                                {
+                               Id = (int)pvm.Point.Id,
+                               Status = pvm.Point.AddedInEnergo,
+                               Data = EnergoImport.Models.CheckButtonModel.DataType.AddedInEnergo
+                                })
+                            </div>
+                        </td>
+                    }
+                    @if ((bool)ViewData["EditStatusLinkIsOk"])
+                    {
+                        <td name="mode1">
+                            <div id="LinkIsOk_checkButton@(pvm.Point.Id)">
+                                @Html.Partial("_checkButtonAjax", new EnergoImport.Models.CheckButtonModel()
+                                {
+                               Id = (int)pvm.Point.Id,
+                               Status = pvm.Point.LinkIsOk,
+                               Data = EnergoImport.Models.CheckButtonModel.DataType.LinkIsOk
+                                })
+                            </div>
+                        </td>
+                    }
+                    @if ((bool)ViewData["EditStatusInEnergo"])
+                    {
+                        <td name="mode1">
+                            <div id="AcceptedInEnergo_checkButton@(pvm.Point.Id)">
+                                @Html.Partial("_checkButtonAjax", new EnergoImport.Models.CheckButtonModel()
+                                {
+                               Id = (int)pvm.Point.Id,
+                               Status = pvm.Point.AcceptedInEnergo,
+                               Data = EnergoImport.Models.CheckButtonModel.DataType.AcceptedInEnergo
+                                })
+                            </div>
+                        </td>
+                    }
+                    @if ((bool)ViewData["DeleteRegPoint"])
+                    {
+                        <td name="mode1">
+                            <a onclick="DeleteRegPoint(@pvm.Point.Id)" class="text-danger">Удалить</a>
+                        </td>
+                    }
+                    <td name="mode2">@pvm.InSmeta</td>
+                    <td name="mode2">@pvm.CheckedLinkIsOk</td>
+                    <td name="mode2">@pvm.CheckedAdded</td>
+                    <td name="mode2">@pvm.CheckedInEnergo</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script>
+    function DeleteRegPoint(id) {
+        if (confirm("Удалить точку учета? (id:" + id + ")")) {
+            fetch('/RegPoint/Delete?id=' + id, {
+                method: "POST"
+            }).then(resp => {
+                if (resp.ok) {
+                    document.getElementById("row_" + id).style.backgroundColor = "#555555";
+                }
+                else {
+                    alert("Ошибка при удалении: " + resp.statusText);
+                }
+            });
+        }
+    }
+</script>

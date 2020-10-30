@@ -1,0 +1,25 @@
+﻿SELECT ID_reg_point
+	  ,[Device].[ID]
+	  ,Net_object.ID_object
+	  ,Net_object.Name_object
+	  ,Net.Name_short
+	  ,CASE WHEN U_Local != '' THEN U_Local ELSE '' END U_Local
+	  ,CASE WHEN U_Street != '' THEN 'ул. ' + U_Street ELSE '' END U_Street
+	  ,CASE WHEN U_House != '' THEN ', д. ' + U_House ELSE '' END U_House
+	  ,CASE WHEN U_Build != '' THEN '/' + U_Build ELSE '' END U_Build
+	  ,CASE WHEN U_Flat != '' THEN ', кв. ' + U_Flat ELSE '' END U_Flat
+	  ,Install_act.Name_consumer
+	  ,[Device_type].[Name]
+	  ,[Device_type].[Description] /* Тип связи тут */
+      ,[Device].[Serial_number]
+	  ,[Link].[Phone_number]
+	  ,[Install_act].[TT_coefficient_A]
+	  ,[Install_place]
+	  ,Install_act.Add_date
+	  FROM [REG3].[dbo].[Reg_point]
+LEFT JOIN [REG3].[dbo].[Device] ON [Device].ID = [Reg_point].Device_ID_FK
+LEFT JOIN [REG3].[dbo].[Device_Type] ON [Device].Device_type_ID_FK = [Device_Type].ID
+LEFT JOIN [REG3].[dbo].Net_object ON Reg_point.Object_ID_FK = Net_object.ID_object
+LEFT JOIN [REG3].[dbo].Install_act ON Install_act.ID_act = Reg_point.Install_act_ID_FK
+LEFT JOIN [REG3].[dbo].Link ON Reg_point.Link_ID_FK = Link.ID_link
+LEFT JOIN [REG3].[dbo].Net ON Net_object.Net_ID_FK = Net.ID_net

@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = ViewBag.SubstationName;
+}
+<p></p>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink((string)ViewBag.ContractName, "NetRegions", "Home", new { Id = ViewBag.ContractId }, new { @class = "breadcrumb-item" })</li>
+        <li>@Html.ActionLink((string)ViewBag.RegionName, "ESubstations", "Home", new { Id = ViewBag.RegionId }, new { @class = "breadcrumb-item" })</li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewBag.SubstationName</li>
+    </ol>
+</nav>
+
+<h2>@ViewBag.SubstationName</h2>
+<p style="width:250px;" id="ESubCurrentStatus">@ViewBag.CurrentStatus</p>
+
+@if ((bool)ViewData["EditESubStatus"])
+{
+    <a href="/Home/EditPollRequestStatus/@ViewBag.ESubId" style="width:250px" class="btn @ViewBag.PollRequestBtnClass">@ViewBag.PollRequestBtnText</a><br />
+    using (Ajax.BeginForm("EditESubStatus", null, new AjaxOptions { UpdateTargetId = "ESubCurrentStatus" }, new { @class = "", @style = "float:right; width:250px;" }))
+    {
+        <input type="hidden" name="Id" value="@ViewBag.ESubId" />
+        <input class="btn btn-primary" style="width:250px;" type="submit" value="Установить статус:" />
+        @Html.DropDownList("newStatusId", ViewBag.Statuses as SelectList, new { @class = "form-control" });
+    }
+}
+
+<table class="table table-bordered" style="width: 250px">
+    <thead>
+        <tr style="background:#EEF3F6">
+            <th>Тип</th>
+            <th>Заявки</th>
+            <th>ЭС</th>
+            <th>КС2</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Ввод</td>
+            <td>@ViewBag.CountINPUTAdded/@ViewBag.CountINPUTRequest</td>
+            <td>@ViewBag.CountINPUTInEnergo/@ViewBag.CountINPUT</td>
+            <td>@ViewBag.CountINPUTSmeta/@ViewBag.CountINPUT</td>
+        </tr>
+        <tr>
+            <td>PLC 1Ф</td>
+            <td>@ViewBag.CountPLC1Added/@ViewBag.CountPLC1Request</td>
+            <td>@ViewBag.CountPLC1InEnergo/@ViewBag.CountPLC1</td>
+            <td>@ViewBag.CountPLC1Smeta/@ViewBag.CountPLC1</td>
+        </tr>
+        <tr>
+            <td>PLC 3Ф</td>
+            <td>@ViewBag.CountPLC3Added/@ViewBag.CountPLC3Request</td>
+            <td>@ViewBag.CountPLC3InEnergo/@ViewBag.CountPLC3</td>
+            <td>@ViewBag.CountPLC3Smeta/@ViewBag.CountPLC3</td>
+        </tr>
+        <tr>
+            <td>GSM</td>
+            <td>@ViewBag.CountGSMAdded/@ViewBag.CountGSMRequest</td>
+            <td>@ViewBag.CountGSMInEnergo/@ViewBag.CountGSM</td>
+            <td>@ViewBag.CountGSMSmeta/@ViewBag.CountGSM</td>
+        </tr>
+        <tr style="background:#EEF3F6">
+            <td>Всего:</td>
+            <th>@(ViewBag.CountINPUTAdded + ViewBag.CountPLC1Added + ViewBag.CountPLC3Added + ViewBag.CountGSMAdded)/@(ViewBag.CountINPUTRequest + ViewBag.CountPLC1Request + ViewBag.CountPLC3Request + ViewBag.CountGSMRequest)</th>
+            <th>@(ViewBag.CountINPUTInEnergo + ViewBag.CountPLC1InEnergo + ViewBag.CountPLC3InEnergo + ViewBag.CountGSMInEnergo)/@ViewBag.RegPointsCount</th>
+            <th>@(ViewBag.CountINPUTSmeta + ViewBag.CountPLC1Smeta + ViewBag.CountPLC3Smeta + ViewBag.CountGSMSmeta)/@ViewBag.RegPointsCount</th>
+        </tr>
+    </tbody>
+</table>
+
+<div class="progress">
+    <div id="progressPoints" class="progress-bar" role="progressbar" style="width: @ViewBag.OldProgress%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">@ViewBag.RegPointsOk/@ViewBag.RegPointsCount</div>
+</div>
+<div>
+    <input id="check" type="checkbox" onchange="checkBox1(this)" />
+    <label class="form-check-label" for="check">Временные метки</label>
+</div>
+
+@Html.Partial("_comments", (object)ViewBag.Comments)
+<hr>
+<div style="width: 100%; text-align: right">
+    <a class="btn btn-success" href="~/Data/GetExcelPoints/@ViewBag.ESubId" style="float:left">Скачать Excel</a>
+    @if ((bool)ViewData["EditStatusAdded"])
+    {
+        <a class="btn btn-default" href="~/Home/SetAddedInEnergoAllPLC/@ViewBag.ESubId">Добавил все PLC</a>
+    }
+    <a class="btn btn-default" href="~/Home/HistoryActions/@ViewBag.ESubId" style="align-self:flex-end">Последние действия: @ViewBag.LastActionTime</a>
+</div>
+
+<div>
+    @Html.Partial("_points", (object)ViewBag.PointsList)
+</div>
+
+
+<script>
+    function checkBox1(checkbox) {
+        if (checkbox.checked == true) { changeMode(1); } else { changeMode(0); }
+    }
+    changeMode(0);
+    function changeMode(mode) {
+        if (mode == 1) {
+            document.getElementsByName('mode1').forEach(
+                function (element) {
+                    element.hidden = true;
+                });
+            document.getElementsByName('mode2').forEach(
+                function (element) {
+                    element.hidden = false;
+                });
+        }
+        if (mode == 0) {
+            document.getElementsByName('mode1').forEach(
+                function (element) {
+                    element.hidden = false;
+                });
+            document.getElementsByName('mode2').forEach(
+                function (element) {
+                    element.hidden = true;
+                });
+        }
+    }
+</script>
+<script>
+    function OnEditStatusUpdateColor(rowId) {
+        $(rowId).css({ background: '#a4e1ff' });
+        $('#progressPoints').html('&#128276; - Статистика обновится после перезагрузки страницы');
+        $('#progressPoints').css('width','100%');
+    }
+
+    $("#progressPoints").animate({ width: "@ViewBag.RegPointsProgress%" }, 0);
+</script>

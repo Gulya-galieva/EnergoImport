@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Поиск по серийным номерам";
+}
+<h2>Результаты поиска по серийным номерам</h2>
+<h3>По '@ViewBag.SearchText' совпадений @ViewBag.PointsCount</h3>
+
+@foreach (var pointsList in ViewBag.ESubsPoints)
+{
+    <h3>@pointsList.Key</h3>
+    @Html.Partial("_points", (object)pointsList.Value)
+}

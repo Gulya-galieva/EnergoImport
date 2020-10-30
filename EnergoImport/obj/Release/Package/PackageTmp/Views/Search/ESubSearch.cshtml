@@ -1,0 +1,8 @@
+﻿@{
+    ViewBag.Title = "Поиск по объектам";
+}
+<h2>Результаты поиска по объектам</h2>
+<h3>'@ViewBag.SearchText' совпадений @ViewBag.ESubList.Count</h3>
+<div>
+    @Html.Partial("_eSubstationsTable", (object)ViewBag.ESubList)
+</div>

@@ -1,0 +1,145 @@
+﻿
+@{
+    ViewBag.Title = "Районы";
+}
+<style type="text/css">
+    @@media print {
+        .noprint {
+            display: none !important;
+        }
+
+        a:link:after, a:visited:after {
+            display: none;
+            content: "";
+        }
+
+        body {
+            transform: scale(1.0);
+        }
+    }
+@@page {
+    size: 297mm 210mm; /* landscape */
+    
+    /* you can also specify margins here: */
+    margin: 0mm;
+    margin-right: 0mm; /* for compatibility with both A4 and Letter */
+  }
+</style>
+
+<h1 align="center">@ViewBag.ContractName</h1>
+<canvas id="chartjs-1" class="chartjs" width="500" height="200" 
+        style="display: block; width: 800px; height: 200px;"></canvas>
+
+<div>
+    <table class="table table-hover">
+        <thead>
+            <tr style="background:#EEF3F6">
+                <th>Район</th>
+                <th>Объектов</th>
+                <th>Точек в базе</th>
+                <th>Заявки</th>
+                <th>Энергосфера</th>
+                <th>Для КС2</th>
+                <th>Изменения</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                string regions = "", chartDataAllPoints = "", chartDataRequestToAdd = "", chartDataInEnergoCount = "";
+                if (ViewBag.RegionsList != null)
+                {
+                    int eSubSumm = 0;
+                    foreach (var region in ViewBag.RegionsList)
+                    {
+                        regions += "'" + region.Name + "',";
+                        chartDataAllPoints += ViewData[region.Name + "allPoints"]+",";
+                        chartDataRequestToAdd += ViewData[region.Name + "requestToAdd"] + ",";
+                        chartDataInEnergoCount += ViewData[region.Name + "inEnergoCount"] + ",";
+                        eSubSumm += region.ESubstatons.Count;
+            <tr style="font-size: 18px;">
+                <td>
+                    @Html.ActionLink((string)region.Name, "ESubstations", "Home", new { region.Id }, new { @class = "btn btn-primary", @style = "width:100px;" })
+                </td>
+                <td>@region.ESubstatons.Count</td>
+                <td>@ViewData[region.Name + "allPoints"]</td>
+                <td>@ViewData[region.Name + "requestToAdd"]</td>
+                <td>@ViewData[region.Name + "inEnergoCount"]</td>
+                <td>@ViewData[region.Name + "readyForSmeta"]</td>
+                <td>@ViewData[region.Name + "lastUpdate"]</td>
+            </tr>
+                    }
+            <tr style="background:#EEF3F6; font-size: 20px;">
+                <th>Всего</th>
+                <th>@eSubSumm</th>
+                <th>@ViewBag.InDbSumm</th>
+                <th>@ViewBag.RequestsToAddSumm</th>
+                <th>@ViewBag.InEnergoSumm / @ViewBag.ContractCount</th>
+                <th>@ViewBag.ReadyForSmetaSumm</th>
+                <th>Осталось установить @ViewBag.SMR</th>
+            </tr>
+                }
+
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>new Chart(document.getElementById("chartjs-1"),
+    {
+        "type": "bar",
+        "data": {
+            "labels": [@Html.Raw(regions)], 
+            "datasets": [{
+                "label": "Точек в БД",
+                "data": [@Html.Raw(chartDataAllPoints)], "fill": false,
+                "backgroundColor": [
+                    "rgba(51, 122, 183, 0.8)",
+                    "rgba(51, 122, 183, 0.8)",
+                    "rgba(51, 122, 183, 0.8)",
+                    "rgba(51, 122, 183, 0.8)",
+                    "rgba(51, 122, 183, 0.8)",
+                    "rgba(51, 122, 183, 0.8)",
+                    "rgba(51, 122, 183, 0.8)",
+                    "rgba(51, 122, 183, 0.8)",
+                    "rgba(51, 122, 183, 0.8)",],
+                "borderWidth": 1
+            },
+            {
+                "label": "Принято в ЭС",
+                "data": [@Html.Raw(chartDataInEnergoCount)], "fill": false,
+                "backgroundColor": [
+                    "rgba(100, 225, 100, 0.7)",
+                    "rgba(100, 225, 100, 0.7)",
+                    "rgba(100, 225, 100, 0.7)",
+                    "rgba(100, 225, 100, 0.7)",
+                    "rgba(100, 225, 100, 0.7)",
+                    "rgba(100, 225, 100, 0.7)",
+                    "rgba(100, 225, 100, 0.7)",
+                    "rgba(100, 225, 100, 0.7)",
+                    "rgba(100, 225, 100, 0.7)",],
+                "borderWidth": 1
+            },
+            {
+                "label": "Заявки на внесение в ЭС",
+                "data": [@Html.Raw(chartDataRequestToAdd)], "fill": false,
+                "backgroundColor": [
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)",
+                    "rgba(255, 205, 86, 0.7)"],
+                "borderWidth": 1
+            }]
+        }, "options": {
+            "scales": {
+                "yAxes": [{
+                    "ticks": { "beginAtZero": true }
+                }]
+            }
+        }
+    });</script>

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<EnergoImport.Models.Comment>
+@{
+    Layout = null;
+}
+<button class="btn btn-default" style="width:200px;" type="button" data-toggle="collapse" data-target="#commentsTable">
+    Комментарии: @Model.Count()
+</button>
+
+<div class="collapse" id="commentsTable">
+    <br />
+    @if ((bool)ViewData["AccessComments"])
+    {
+        <form method="post" action="/Home/CommentAdd">
+            <input type="hidden" value="@ViewBag.ESubId" name="ESubstationId" />
+            <input type="hidden" value="@ViewBag.UserId" name="UserId" />
+            <input type="hidden" value="@DateTime.Now" name="Time" />
+            <textarea style="float:left;" class="form-control" id="commentText" rows="1" placeholder="Текст комментария..." name="Text"></textarea>
+            <input type="submit" value="Отправить" class="btn btn-primary" />
+        </form>
+    }
+
+    <table class="table table-striped">
+        @{
+            foreach (var comment in Model)
+            {
+                <tr>
+                    <td>
+                        <h4>@comment.User.Name</h4>
+                        <h5>@comment.Text</h5>
+                        <a style="color:#999">@comment.Time.ToString("dd MMMM в HH:mm")</a>
+                    </td>
+                    <td style="font-size:12px; text-align:end">
+                        @if (comment.User.Id == ViewBag.UserId || ViewBag.UserId == 1)
+                        {
+                            <a style="color:cornflowerblue" href="/Home/CommentDelete/@comment.Id">Удалить</a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+
+

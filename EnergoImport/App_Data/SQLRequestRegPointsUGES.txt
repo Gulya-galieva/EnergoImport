@@ -1,0 +1,20 @@
+﻿SELECT ID_reg_point
+	  ,[Net_object].[ID_object]
+	  ,[Net_object].[Name_object]
+	  ,[Net].[Name_short]
+	  ,[Install_act].[Adress]
+	  ,[Install_act].[Name_consumer]
+	  ,[Reg_device_type].[Name]
+	  ,[Reg_device_type].[Description] /* Тип связи тут */
+      ,[Reg_device].[Serial_number]
+	  ,[Link].[Phone_number]
+	  ,[Install_act].[TT_coefficient_A]
+	  ,Install_place
+	  ,Install_act.Add_date
+  FROM [REG2].[dbo].[Reg_point]
+LEFT JOIN [REG2].[dbo].Reg_device ON Reg_device.ID = [Reg_point].Reg_device_ID_FK
+LEFT JOIN [REG2].[dbo].Reg_device_type ON Reg_device_type.ID = Reg_device.Reg_device_type_ID_FK
+LEFT JOIN [REG2].[dbo].Net_object ON Reg_point.Object_ID_FK = Net_object.ID_object
+LEFT JOIN [REG2].[dbo].Install_act ON Install_act.ID_act = Reg_point.Install_act_ID_FK
+LEFT JOIN [REG2].[dbo].Link ON Reg_point.Link_ID_FK = Link.ID_link
+LEFT JOIN [REG2].[dbo].Net ON Net_object.Net_ID_FK = Net.ID_net

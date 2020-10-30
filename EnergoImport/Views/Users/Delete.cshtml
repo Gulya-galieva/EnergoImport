@@ -1,0 +1,103 @@
+﻿@model EnergoImport.Models.User
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Удаление</h2>
+
+<h3>Удалить пользователя?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Login)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Login)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Pass)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Pass)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccessDbUGES)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccessDbUGES)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccessDbCES)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccessDbCES)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccessImport)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccessImport)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditStatusInEnergo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditStatusInEnergo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditStatusLinkIsOk)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditStatusLinkIsOk)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EditStatusAdded)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EditStatusAdded)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AccessComments)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AccessComments)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="btn btn-danger" /> |
+            @Html.ActionLink("Вернуться к списку", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<EnergoImport.Models.ESubstationViewModel>
+
+<table class="table table-hover">
+    <thead>
+        <tr style="background:#EEF3F6">
+            <th>№</th>
+            <th>Название</th>
+            <th>Статус</th>
+            <th>Обработано/Заявки</th>
+            <th>Точек в Энергосфере/Всего</th>
+            <th>Для КС2</th>
+            <th>Комментарии</th>
+            <th>Изменения</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int n = 0;
+            foreach (var item in Model)
+            {
+                n++;
+                <tr style="background:@item.RowColorCode">
+                    <td>@n</td>
+                    <th>
+                        <a href="/Home/ESubstations/@item.ESubstation.NetRegion.Id">@item.ESubstation.NetRegion.Name</a> /
+                        @Html.Raw(item.OperatorIcon)
+                        <a href="/Home/Points/@item.ESubstation.Id">@item.ESubstation.Name</a>
+
+                    </th>
+                    <td>@item.ESubstation.StatusESub.Text</td>
+                    <td>@item.AddedCount/@item.RequestsToAddCount</td>
+                    <td>@item.InEnergoCount/@item.PointsCount</td>
+                    <td>@item.ReadyForSmeta</td>
+                    <td><a href="~/Home/Points/@item.ESubstation.Id">[@item.CommentsCount] @item.LastComment</a></td>
+                    <td><a href="~/Home/HistoryActions/@item.ESubstation.Id">@item.LastAction</a></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
