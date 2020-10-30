@@ -86,15 +86,22 @@ namespace EnergoImport.Controllers
             if(contract != null)
             {
                 ViewBag.RegionsList = contract.NetRegions;
+                int eSubCount = 0;
                 int inDbSumm = 0;
                 int requestToAddSumm = 0;
                 int inEnergoSumm = 0;
                 int readyForSmetaSumm = 0;
                 foreach (var region in contract.NetRegions)
                 {
+                    /*Добавлено 30.10.2020 Гуля*/
+                    int eSub = db.ESubstations.Where(p => p.NetRegionId == region.Id && p.RegPoints.Count != 0).Count();
+                    eSubCount += eSub;
+                    //Передадим количество добавленных точек
+                    ViewData[region.Name + "allSub"] = eSub;
+
                     int inDb = db.RegPoints.Where(p => p.ESubstation.NetRegionId == region.Id).Count();
                     inDbSumm += inDb;
-                    //Передадим количество добавленных в Энергосферу точек
+                    //Передадим количество добавленных точек
                     ViewData[region.Name + "allPoints"] = inDb;
 
                     int requestToAdd = db.RegPoints.Count(p => p.ESubstation.NetRegionId == region.Id && p.LinkIsOk && !p.AcceptedInEnergo && !p.AddedInEnergo);
@@ -116,6 +123,7 @@ namespace EnergoImport.Controllers
                     Models.Action lastAction = db.Actions.Where(a => a.ESubstation.NetRegionId == region.Id).OrderByDescending(a => a.Time).FirstOrDefault();
                     ViewData[region.Name + "lastUpdate"] = (lastAction == null)? "-" : lastAction.Time.ToString("dd MMMM в HH:mm"); //"dd MMMM, yyyy в HH:mm" с годом
                 }
+                ViewBag.eSubCount = eSubCount;
                 ViewBag.InDbSumm = inDbSumm;
                 ViewBag.RequestsToAddSumm = requestToAddSumm;
                 ViewBag.InEnergoSumm = inEnergoSumm;

@@ -45,22 +45,24 @@
         </thead>
         <tbody>
             @{
-                string regions = "", chartDataAllPoints = "", chartDataRequestToAdd = "", chartDataInEnergoCount = "";
+                string regions = "", chartDataAllSub = "", chartDataAllPoints = "", chartDataRequestToAdd = "", chartDataInEnergoCount = "";
                 if (ViewBag.RegionsList != null)
                 {
                     int eSubSumm = 0;
                     foreach (var region in ViewBag.RegionsList)
                     {
                         regions += "'" + region.Name + "',";
+                        chartDataAllSub += ViewData[region.Name + "allSub"]+",";
                         chartDataAllPoints += ViewData[region.Name + "allPoints"]+",";
                         chartDataRequestToAdd += ViewData[region.Name + "requestToAdd"] + ",";
                         chartDataInEnergoCount += ViewData[region.Name + "inEnergoCount"] + ",";
                         eSubSumm += region.ESubstatons.Count;
+                /*<td>@region.ESubstatons.Count</td>*/
             <tr style="font-size: 18px;">
                 <td>
                     @Html.ActionLink((string)region.Name, "ESubstations", "Home", new { region.Id }, new { @class = "btn btn-primary", @style = "width:100px;" })
                 </td>
-                <td>@region.ESubstatons.Count</td>
+                <td>@ViewData[region.Name + "allSub"]</td>
                 <td>@ViewData[region.Name + "allPoints"]</td>
                 <td>@ViewData[region.Name + "requestToAdd"]</td>
                 <td>@ViewData[region.Name + "inEnergoCount"]</td>
@@ -68,9 +70,10 @@
                 <td>@ViewData[region.Name + "lastUpdate"]</td>
             </tr>
                     }
+                    /*<th>@eSubSumm</th>*/
             <tr style="background:#EEF3F6; font-size: 20px;">
                 <th>Всего</th>
-                <th>@eSubSumm</th>
+                <th>@ViewBag.eSubCount</th>
                 <th>@ViewBag.InDbSumm</th>
                 <th>@ViewBag.RequestsToAddSumm</th>
                 <th>@ViewBag.InEnergoSumm / @ViewBag.ContractCount</th>
