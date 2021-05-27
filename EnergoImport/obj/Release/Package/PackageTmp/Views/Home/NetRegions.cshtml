@@ -57,7 +57,7 @@
                         chartDataRequestToAdd += ViewData[region.Name + "requestToAdd"] + ",";
                         chartDataInEnergoCount += ViewData[region.Name + "inEnergoCount"] + ",";
                         eSubSumm += region.ESubstatons.Count;
-                /*<td>@region.ESubstatons.Count</td>*/
+                /*<td>@region.ESubstatons.Count</td> было вместо <td>@ViewData[region.Name + "allSub"]</td>*/
             <tr style="font-size: 18px;">
                 <td>
                     @Html.ActionLink((string)region.Name, "ESubstations", "Home", new { region.Id }, new { @class = "btn btn-primary", @style = "width:100px;" })
@@ -70,7 +70,7 @@
                 <td>@ViewData[region.Name + "lastUpdate"]</td>
             </tr>
                     }
-                    /*<th>@eSubSumm</th>*/
+                    /*<th>@eSubSumm</th> было вместо <th>@ViewBag.eSubCount</th>*/
             <tr style="background:#EEF3F6; font-size: 20px;">
                 <th>Всего</th>
                 <th>@ViewBag.eSubCount</th>
